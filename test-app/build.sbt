@@ -2,7 +2,7 @@ organization := "com.feth"
 
 name := "play-authenticate-tests"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.12"
 
 version := "1.0-SNAPSHOT"
 

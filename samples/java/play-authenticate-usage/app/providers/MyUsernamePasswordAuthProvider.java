@@ -1,8 +1,10 @@
 package providers;
 
+import com.feth.play.module.mail.Mailer;
 import com.feth.play.module.mail.Mailer.Mail.Body;
 import com.feth.play.module.mail.Mailer.MailerFactory;
 import com.feth.play.module.pa.PlayAuthenticate;
+import com.feth.play.module.pa.providers.AuthProvider;
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthUser;
 import controllers.routes;
@@ -23,10 +25,12 @@ import play.mvc.Call;
 import play.mvc.Http.Context;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,6 +46,7 @@ public class MyUsernamePasswordAuthProvider
 	private static final String SETTING_KEY_LINK_LOGIN_AFTER_PASSWORD_RESET = "loginAfterPasswordReset";
 
 	private static final String EMAIL_TEMPLATE_FALLBACK_LANGUAGE = "en";
+
 
 	@Override
 	protected List<String> neededSettingKeys() {
@@ -133,10 +138,10 @@ public class MyUsernamePasswordAuthProvider
 	private final Form<MyLogin> LOGIN_FORM;
 
 	@Inject
-	public MyUsernamePasswordAuthProvider(final Application app, final PlayAuthenticate auth, final FormFactory formFactory,
-										  final ApplicationLifecycle lifecycle, MailerFactory mailerFactory) {
+	public MyUsernamePasswordAuthProvider(final Provider<Application> app, final PlayAuthenticate auth, final FormFactory formFactory,
+                                          final ApplicationLifecycle lifecycle, MailerFactory mailerFactory) {
 		super(auth, lifecycle, mailerFactory);
-		this.app = app;
+		this.app = app.get();
 
 		this.SIGNUP_FORM = formFactory.form(MySignup.class);
 		this.LOGIN_FORM = formFactory.form(MyLogin.class);
